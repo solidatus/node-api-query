@@ -37,6 +37,7 @@ const argv = yargs
   .demandCommand()
   .help().argv
 
+console.log(`Fetching model from: '${argv.host}/api/v1/models/${argv.model}/load'`)
 console.log(`Executing query:\n${argv.query}`)
 
 async function loadModel() {
