@@ -26,4 +26,4 @@ Install the dependencies from NPM:
 
 ## Example
 
-`node index.js query --model <MODEL_ID> --query 'isAttribute() and $name = "Country"' --host https://trial.solidatus.com --token <API_TOKEN>
+`node index.js query --model <MODEL_ID> --query 'isAttribute() and $name = "Country"' --host https://trial.solidatus.com --token <API_TOKEN>`
