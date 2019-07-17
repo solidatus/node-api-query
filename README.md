@@ -1,4 +1,4 @@
-# CSV Loader
+# Soliatus API Query
 This is an example piece of JavaScript code to retreive a Solidatus model's data and execute a Solidatus query against it.
 
 The entry point is `index.js`.
