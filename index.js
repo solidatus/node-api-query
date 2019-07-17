@@ -32,7 +32,7 @@ const argv = yargs
       })
   })
   .example(
-    '$0 load --model 5d1c66e06137c40001013b80 --query "isAttribute() and $numIncoming = 0" --host https://trial.solidatus.com --token <API_TOKEN>'
+    '$0 query --model 5d1c66e06137c40001013b80 --query "isAttribute() and $numIncoming = 0" --host https://trial.solidatus.com --token <API_TOKEN>'
   )
   .demandCommand()
   .help().argv

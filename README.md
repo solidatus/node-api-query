@@ -27,3 +27,5 @@ Install the dependencies from NPM:
 ## Example
 
 `node index.js query --model <MODEL_ID> --query 'isAttribute() and $name = "Country"' --host https://trial.solidatus.com --token <API_TOKEN>`
+
+Sample can be edited to interrogate the matches entities. By default, the script outputs the paths of the matched entities as JSON.
