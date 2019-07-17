@@ -1,0 +1,131 @@
+Query
+  = _ sentence:Sentence _ { return sentence; }
+
+Sentence
+  = OrSentence
+
+OrSentence
+  = lhs:AndSentence __ OrToken __ rhs:OrSentence { return { type: 'OR', lhs: lhs, rhs: rhs }; }
+  / AndSentence
+
+AndSentence
+  = lhs:NotSentence __ AndToken __ rhs:AndSentence { return { type: 'AND', lhs: lhs, rhs: rhs }; }
+  / NotSentence
+
+NotSentence
+  = NotToken __ sentence:ExistentialSentence { return { type: 'NOT', sentence: sentence }; }
+  / ExistentialSentence
+
+ExistentialSentence
+  = AnyToken __ identifier:Identifier __ InToken __ list:Object __ sentence:NotSentence { return { type: 'ANY', 'var': identifier, list: list, sentence: sentence }}
+  / UniversalSentence
+
+UniversalSentence
+  = AllToken __ identifier:Identifier __ InToken __ list:Object __ sentence:NotSentence { return { type: 'ALL', 'var': identifier, list: list, sentence: sentence }}
+  / ComparisonSentence
+
+ComparisonSentence
+ = arg1:Argument _ op:ComparisonOp _ arg2:Argument {return {type: 'PREDICATE', predicate: op, args: [arg1, arg2]}; }
+ / PrimarySentence
+
+PrimarySentence
+  = '(' _ sentence:Sentence _ ')' { return sentence; }
+  / predicate:PredicateName '(' _ args:PredicateArguments? _ ')' { return { type: 'PREDICATE', predicate: predicate, args: args || [] }; }
+  / AllToken _ '[' _ identifier:Identifier __ InToken __ list:Object _ ',' _ sentence:Sentence _ ']' { return { type: 'ALL', 'var': identifier, list: list, sentence: sentence }}
+  / AnyToken _ '[' _ identifier:Identifier __ InToken __ list:Object _ ',' _ sentence:Sentence _ ']' { return { type: 'ANY', 'var': identifier, list: list, sentence: sentence }}
+
+PredicateName
+  = Identifier
+
+PredicateArguments
+  = first:Argument rest:(_ ',' _ arg:Argument { return arg; })* { return [first].concat(rest); }
+
+Argument
+  = Value
+  / Object
+
+Object
+  = path:Path { return { type: 'OBJECT', path: path }; }
+
+number_frac
+    = "." chars:[0-9]*
+        { return "." + chars.join(''); }
+
+number
+    = !('-'? [0-9]+[a-z-_$]/ '-'?[0-9]+ '.' [0-9]*[a-z-_$]) neg:'-'? chars:[0-9]+ frac:number_frac?
+        { return parseFloat((neg ? neg : '') + chars.join('') + frac); }
+
+Path
+  = first:(Identifier / EscapedIdentifier) rest:(('.' identifier:Identifier { return identifier; }) / EscapedIdentifier)*
+    {
+      return [first].concat(rest);
+    }
+
+Value
+  = num:number { return { type:'NUMBER', value: num }; }
+  / '"' chars:DoubleStringCharacter* '"' { return { type: 'STRING', value: chars.join('') }; }
+  / "'" chars:SingleStringCharacter* "'" { return { type: 'STRING', value: chars.join('') }; }
+
+DoubleStringCharacter
+  = !('"' / "\\") char:UnescapedDoubleCharacter { return char; }
+  / "\\" sequence:EscapeSequence { return sequence; }
+
+SingleStringCharacter
+  = !("'" / "\\") char:UnescapedSingleCharacter { return char; }
+  / "\\" sequence:EscapeSequence { return sequence; }
+
+// Everything but \ (\x5c) and " (\x22)
+UnescapedDoubleCharacter
+  = [\x20-\x21\x23-\x5B\x5D-\uFFFFFF]
+
+// Everything but \ (\x5c) and ' (\x27)
+UnescapedSingleCharacter
+  = [\x20-\x26\x28-\x5B\x5D-\uFFFFFF]
+
+EscapeSequence
+  = "'"
+  / '"'
+  / "\\"
+  / "b"  { return "\b";   }
+  / "f"  { return "\f";   }
+  / "n"  { return "\n";   }
+  / "r"  { return "\r";   }
+  / "t"  { return "\t";   }
+  / "v"  { return "\x0B"; }   // IE does not recognize "\v".
+
+Identifier
+  = chars:([a-z0-9-_$]i)+ { return chars.join(''); }
+
+EscapedIdentifier
+  = '[' chars:EscapedIdentifierCharacter+ ']' { return chars.join(''); }
+
+EscapedIdentifierCharacter
+  = !(']' / '\\') char:UnescapedIdentifierCharacter { return char; }
+  / '\\' sequence:IdentifierEscapeSequence { return sequence; }
+
+// Everything but \ (\x5c) and ] (\x93)
+UnescapedIdentifierCharacter
+  = [\x20-\x5B\x5D-\x92\x94-\uFFFFFF]
+
+IdentifierEscapeSequence
+  = '\\'
+  / ']' { return '\]'; }
+
+_ "OptionalWhiteSpace"
+  = WhiteSpace *
+
+__ "MandatoryWhiteSpace"
+  = WhiteSpace +
+
+WhiteSpace
+  = [ \t\n\r]+
+
+NotToken = 'NOT'/'not'
+AndToken = 'AND'/'and'
+OrToken  = 'OR'/'or'
+AllToken = 'ALL'/'all'
+AnyToken = 'ANY'/'any'
+InToken  = 'IN'/'in'
+
+ComparisonOp
+ = '==' {return { name: 'equals', character: '==' }}/'=' {return { name: 'equals', character: '=' }}/'<=' {return { name: 'lt_or_equals', character: '<='}}/'>=' {return {name:'gt_or_equals', character: '>='}}/'>' {return {name:'greater_than', character: '>'}}/'<' {return {name:'less_than', character: '<'}}/'!=' {return {name:'not_equals', character: '!='}}

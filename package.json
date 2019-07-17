@@ -1,0 +1,26 @@
+{
+  "name": "api-query",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Solidatus",
+  "license": "MIT",
+  "dependencies": {
+    "fs": "0.0.1-security",
+    "lodash": "^4.17.11",
+    "node-fetch": "^2.3.0",
+    "pegjs": "^0.10.0",
+    "prettier": "^1.16.4",
+    "uuid": "^3.3.2",
+    "yargs": "^13.2.2"
+  },
+  "devDependencies": {
+    "eslint": "^5.14.1",
+    "eslint-config-prettier": "^4.0.0",
+    "eslint-plugin-prettier": "^3.0.1",
+    "prettier": "^1.16.4"
+  }
+}
