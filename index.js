@@ -2,7 +2,6 @@ const _ = require('lodash')
 const yargs = require('yargs')
 const fetch = require('node-fetch')
 const Model = require('./lib/model/Model')
-const EntityCollection = require('./lib/model/EntityCollection')
 const executeQuery = require('./lib/query/executeQuery')
 
 // Extract arguments from the command line
@@ -60,7 +59,23 @@ async function loadModel() {
 loadModel().then(modelResponse => {
   const model = new Model(modelResponse)
   const entities = executeQuery(argv.query, model)
-  const output = _.map(entities, e => [...e.getParentsDescending(), e].map(e => e.name))
+  const getOutputForEntity = e => {
+    if (e.isTransition) {
+      return {
+        type: 'transition',
+        source: getOutputForEntity(e.source),
+        target: getOutputForEntity(e.target),
+        properties: e.properties
+      }
+    } else {
+      return {
+        type: e.getType(),
+        path: [...e.getParentsDescending(), e].map(e => e.name),
+        properties: e.properties
+      }
+    }
+  }
+  const output = _.map(entities, e => getOutputForEntity(e))
   console.log('\nResult:')
   console.log(JSON.stringify(output, null, 2))
 })
