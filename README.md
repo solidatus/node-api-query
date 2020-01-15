@@ -53,16 +53,16 @@ Tests are specified in a JSON file in the following format:
 
 The expected values are automatically stored in this file alongside the corresponding queries by executing the update-tests command. This stores the returned entity IDs inside the JSON file.
 
-`node index update-tests <test-file.json> --host https://trial.solidatus.com --token <API_TOKEN> --model <MODEL_ID>`
+`node index update-tests saved-tests/sample.json --host https://trial.solidatus.com --token <API_TOKEN> --model <MODEL_ID>`
 
 Using the run-tests command, we can assert that the returned IDs have not changed.
 
-`node index run-tests <test-file.json> --host https://trial.solidatus.com --token <API_TOKEN> --model <MODEL_ID>`
+`node index run-tests saved-tests/sample.json --host https://trial.solidatus.com --token <API_TOKEN> --model <MODEL_ID>`
 
 Output
 
 ```
-Saved queries in test-file.json
+Saved queries in saved-tests/sample.json
     ✓ get_objects
     ✓ get_layers
 
