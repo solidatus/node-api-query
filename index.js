@@ -3,6 +3,7 @@ const yargs = require('yargs')
 const fetch = require('node-fetch')
 const Model = require('./lib/model/Model')
 const executeQuery = require('./lib/query/executeQuery')
+const HttpsProxyAgent = require('https-proxy-agent')
 
 // Extract arguments from the command line
 const argv = yargs
@@ -29,6 +30,10 @@ const argv = yargs
         describe: 'Solidatus API token',
         type: 'string'
       })
+      .option('proxy', {
+        describe: 'The URL of the proxy',
+        type: 'string'
+      })
   })
   .example(
     '$0 query --model 5d1c66e06137c40001013b80 --query "isAttribute() and $numIncoming = 0" --host https://trial.solidatus.com --token <API_TOKEN>'
@@ -45,8 +50,14 @@ async function loadModel() {
     Authorization: 'Bearer ' + argv.token
   }
 
+  let agent
+  if (argv.proxy) {
+    agent = new HttpsProxyAgent(argv.proxy)
+  }
+
   return await fetch(`${argv.host}/api/v1/models/${argv.model}/load`, {
     method: 'GET',
+    agent,
     headers
   }).then(function(response) {
     if (!response.ok) {
@@ -78,4 +89,5 @@ loadModel().then(modelResponse => {
   const output = _.map(entities, e => getOutputForEntity(e))
   console.log('\nResult:')
   console.log(JSON.stringify(output, null, 2))
+  console.log('----')
 })
