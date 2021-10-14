@@ -17,7 +17,7 @@ async function loadModel(args) {
     headers
   }).then(function(response) {
     if (!response.ok) {
-      throw Error(response.statusText)
+      throw new Error(response.statusText)
     }
     return response.json()
   })
