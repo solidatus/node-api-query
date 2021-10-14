@@ -69,3 +69,18 @@ Saved queries in saved-tests/sample.json
 
   2 passing (24ms)
 ```
+
+### Run Webserver
+
+The query api can be run as webservice by running 
+
+`node server --host <SOLIDATUS_HOST>`
+
+- `<SOLIDATUS_HOST>` - The URL of the Solidatus instance, e.g. https://trial.solidatus.com
+
+The webservice uses the REST API protocols:
+
+#### Executing a query
+
+The queries can be executed by using a `GET` request on the `/api/query` endpoint and providing a solidatus API token and `modelId` and `query` as query string parameters.
+The API call returns a JSON object.
