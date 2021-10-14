@@ -13,30 +13,40 @@ const argv = yargs.option('host', {
   type: 'string'
 }).argv
 
-app.get('/api/query', (req, res, next) => {
+const getToken = req => {
+  if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
+    return req.headers.authorization.split(' ')[1]
+  } else {
+    return null
+  }
+}
+
+app.get('/api/query', (req, res) => {
   const params = req.query
-  const apiKey = req.headers['solidatus-api']
+  const token = getToken(req)
   const args = {
     host: argv['host'],
     model: params.modelId,
     query: params.query,
-    token: apiKey
+    token: token
   }
   queryCommand
     .queryModel(args)
     .then(output => {
+      console.log('Query execution successfully completed!')
       res.status(200).send(output)
     })
     .catch(err => {
+      console.error(err)
       if (
-        err.name == QUERY_ERROR_NAMES.ParseError ||
-        QUERY_ERROR_NAMES.SyntaxError ||
-        QUERY_ERROR_NAMES.UnknownPredicateError ||
-        QUERY_ERROR_NAMES.PropertyNotEnumerableError
+        err.name === QUERY_ERROR_NAMES.ParseError ||
+        err.name === QUERY_ERROR_NAMES.SyntaxError ||
+        err.name === QUERY_ERROR_NAMES.UnknownPredicateError ||
+        err.name === QUERY_ERROR_NAMES.PropertyNotEnumerableError
       ) {
         res.status(400).send({
           status: 400,
-          error: 'Bad Request',
+          error: err.name,
           message: err.message
         })
       } else if (err instanceof FetchError) {
@@ -47,9 +57,9 @@ app.get('/api/query', (req, res, next) => {
         })
       } else if (err.message == 'Unauthorized') {
         res.status(401).send({
-          status: 404,
-          error: 'Not Found',
-          message: `Model with id:${params.modelId} not found`
+          status: 401,
+          error: 'Unauthorized',
+          message: `Request has been unauthorized, token may be invalid or missing`
         })
       } else if (err.message == 'Not Found') {
         res.status(404).send({

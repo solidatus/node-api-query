@@ -23,8 +23,11 @@ const getOutputForEntity = e => {
 }
 
 const queryModel = async argv => {
+  console.log(`Loading model with id: ${argv.model}`)
   const modelResponse = await loadModel(argv)
   const model = new Model(modelResponse)
+  console.log(`Model ${model.id}`)
+  console.log(`Applying query ${argv.query} to model ${model.id}`)
   const entities = executeQuery(argv.query, model)
   const output = _.map(entities, e => getOutputForEntity(e))
   return output
