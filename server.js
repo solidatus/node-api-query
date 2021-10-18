@@ -3,12 +3,8 @@ const express = require('express')
 const yargs = require('yargs')
 const queryCommand = require('./commands/queryCommand')
 const { QUERY_ERROR_NAMES } = require('./lib/query/queryErrors')
-//const https = require('https')
 const http = require('http')
 const port = 8080
-//const privateKey = fs.readFileSync('sslcert/server.key', 'utf8')
-//const certificate = fs.readFileSync('sslcert/server.crt', 'utf8')
-//const credentials = { key: privateKey, cert: certificate }
 
 const { FetchError } = require('node-fetch')
 const app = express()
@@ -18,6 +14,8 @@ const argv = yargs.option('host', {
   describe: 'The URL of the Solidatus instance',
   type: 'string'
 }).argv
+
+//add port as an option and then dockerise heheh your
 
 const getToken = req => {
   if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
@@ -92,7 +90,6 @@ app.get('/api/query', (req, res) => {
 })
 
 http.createServer(app).listen(port)
-//https.createServer(credentials, app).listen(8443)
 
 console.log('Solidatus Query API Server started successfully!')
 console.log(`Listening on port:${port}`)
