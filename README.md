@@ -88,11 +88,12 @@ To authenticate against the API, you will need to request an API token from your
 
 The command to start the webserver is:
 
-`node server --host <SOLIDATUS_HOST>`
+`node server --host <SOLIDATUS_HOST> --port <PORT>`
 
 - `<SOLIDATUS_HOST>` - The URL of the Solidatus instance, e.g. https://trial.solidatus.com
+- `<PORT>` (optional) - The port that the server listens on, e.g. `3000`
 
-by default the port that the server listens on is `8080`
+If the port option is not set by default the port that the server listens on is `8080`
 
 ### Authentication
 
@@ -110,10 +111,11 @@ The API call returns a JSON object.
 
 **Example**
 
-`curl -X POST -H "Authorization: Bearer <API_TOKEN>" -H "Content-Type: application/json" -d '{"modelId": "<MODEL_ID", "query": "<QUERY>"}' http://localhost:8080/api/query`
+`curl -X POST -H "Authorization: Bearer <API_TOKEN>" -H "Content-Type: application/json" -d '{"modelId": "<MODEL_ID", "query": "<QUERY>"}' <WEBSERVER_DOMAIN>/api/query`
 
 - `<MODEL_ID>` - The ID of the model in Solidatus
 - `<QUERY>` - The Solidatus query
+- `<WEBSERVER_DOMAIN>` - Refers to the domain and port that the webserver is hosted on, e.g. if run locally it would be http://localhost:8080
 
 Requests can be made using any tool that allows you to send HTTP requests.
 

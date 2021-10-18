@@ -4,20 +4,25 @@ const yargs = require('yargs')
 const queryCommand = require('./commands/queryCommand')
 const { QUERY_ERROR_NAMES } = require('./lib/query/queryErrors')
 const http = require('http')
-const port = 8080
 
 const { FetchError } = require('node-fetch')
 const app = express()
 
 app.use(express.json())
 
-const argv = yargs.option('host', {
-  demandOption: true,
-  describe: 'The URL of the Solidatus instance',
-  type: 'string'
-}).argv
+const argv = yargs
+  .option('host', {
+    demandOption: true,
+    describe: 'The URL of the Solidatus instance',
+    type: 'string'
+  })
+  .option('port', {
+    demandOption: false,
+    describe: 'The port for the webserver to run on, otherwise the default is 8080',
+    type: 'number'
+  }).argv
 
-//maybe
+const port = argv['port'] || 8080
 
 const getToken = req => {
   if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
@@ -95,3 +100,4 @@ app.post('/api/query', (req, res) => {
 http.createServer(app).listen(port)
 
 console.log('Solidatus Query API Server started successfully!')
+console.log(`Server is listening on port:${port}`)
