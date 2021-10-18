@@ -1,4 +1,4 @@
-# Soliatus API Query
+# Solidatus API Query
 
 This is an example piece of JavaScript code to retreive a Solidatus model's data and execute a Solidatus query against it.
 
@@ -70,17 +70,50 @@ Saved queries in saved-tests/sample.json
   2 passing (24ms)
 ```
 
-### Run Webserver
+## Running a Webserver
 
-The query api can be run as webservice by running 
+This is node app can also be run as a separate webserver that you can query using REST API calls 
+The entry point for the webserver is `server.js`
+
+**The current webserver implementation only supports the querying functionality as of 18/10/21**
+### Requirements
+
+- node
+- npm
+- a valid Solidatus API token to read a model
+
+To authenticate against the API, you will need to request an API token from your user account page in Solidatus. Information on how to get this can be found at `/help/api/authenticating.html` in your Solidatus instance help pages.
+
+### Starting the server
+
+The command to start the webserver is:
 
 `node server --host <SOLIDATUS_HOST>`
 
 - `<SOLIDATUS_HOST>` - The URL of the Solidatus instance, e.g. https://trial.solidatus.com
 
-The webservice uses the REST API protocols:
+by default the port that the server listens on is `8080`
 
-#### Executing a query
+### Authentication
 
-The queries can be executed by using a `GET` request on the `/api/query` endpoint and providing a solidatus API token and `modelId` and `query` as query string parameters.
+Similarly with the standard lone app, the webserver requires a valid Solidatus API token to execute a query on a model.
+
+To authenticate a REST API call to the service, the api token needs to be passed into the header of the request.
+
+**Example**
+
+`curl -H "Authorization: Bearer <API_TOKEN>"`
+### Executing a query
+
+The queries can be executed by using a `POST` request on the `/api/query` endpoint and providing the `modelId` and `query` fields in the `JSON` body of the `POST` request
 The API call returns a JSON object.
+
+**Example**
+
+`curl -X POST -H "Authorization: Bearer <API_TOKEN>" -H "Content-Type: application/json" -d '{"modelId": "<MODEL_ID", "query": "<QUERY>"}' http://localhost:8080/api/query`
+
+- `<MODEL_ID>` - The ID of the model in Solidatus
+- `<QUERY>` - The Solidatus query
+
+Requests can be made using any tool that allows you to send HTTP requests.
+
