@@ -38,7 +38,7 @@ const argv = yargs
         type: 'string'
       })
     },
-    queryCommand
+    queryCommand.queryCommand
   )
   .command(
     'run-tests <test_file>',
