@@ -10,17 +10,11 @@ const app = express()
 
 app.use(express.json())
 
-const argv = yargs
-  .option('host', {
-    demandOption: true,
-    describe: 'The URL of the Solidatus instance',
-    type: 'string'
-  })
-  .option('port', {
-    demandOption: false,
-    describe: 'The port for the webserver to run on, otherwise the default is 8080',
-    type: 'number'
-  }).argv
+const argv = yargs.option('port', {
+  demandOption: false,
+  describe: 'The port for the webserver to run on, otherwise the default is 8080',
+  type: 'number'
+}).argv
 
 const port = argv['port'] || 8080
 
@@ -44,7 +38,7 @@ app.post('/api/query', (req, res) => {
   const params = req.body
   const token = getToken(req)
   const args = {
-    host: argv['host'],
+    host: params.host,
     model: params.modelId,
     query: params.query,
     token: token
