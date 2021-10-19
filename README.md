@@ -4,6 +4,13 @@ This is an example piece of JavaScript code to retreive a Solidatus model's data
 
 The entry point is `index.js`.
 
+
+# Table of Contents
+1. [Requirements](#requirements)
+2. [Setup](#setup)
+3. [Usage](#usage)
+4. [Running a Webserver](#running-a-webserver)
+
 ## Requirements
 
 - node
@@ -88,9 +95,8 @@ To authenticate against the API, you will need to request an API token from your
 
 The command to start the webserver is:
 
-`node server --host <SOLIDATUS_HOST> --port <PORT>`
+`node server --port <PORT>`
 
-- `<SOLIDATUS_HOST>` - The URL of the Solidatus instance, e.g. https://trial.solidatus.com
 - `<PORT>` (optional) - The port that the server listens on, e.g. `3000`
 
 If the port option is not set by default the port that the server listens on is `8080`
@@ -111,8 +117,18 @@ The API call returns a JSON object.
 
 **Example**
 
-`curl -X POST -H "Authorization: Bearer <API_TOKEN>" -H "Content-Type: application/json" -d '{"modelId": "<MODEL_ID", "query": "<QUERY>"}' <WEBSERVER_DOMAIN>/api/query`
+`curl -X POST -H "Authorization: Bearer <API_TOKEN>" -H "Content-Type: application/json" -d '{"host": <SOLIDATUS_HOST>, "modelId": "<MODEL_ID", "query": "<QUERY>"}' <WEBSERVER_DOMAIN>/api/query`
 
+An example of a json body passed into  (contained in the `-d` flag for `curl`)
+```json
+{
+  "host": "<SOLIDATUS_HOST>",
+  "modelId": "<MODEL_ID>",
+  "query": "<QUERY>",
+}
+```
+
+- `<SOLIDATUS_HOST>` - The URL of the Solidatus instance, e.g. https://trial.solidatus.com
 - `<MODEL_ID>` - The ID of the model in Solidatus
 - `<QUERY>` - The Solidatus query
 - `<WEBSERVER_DOMAIN>` - Refers to the domain and port that the webserver is hosted on, e.g. if run locally it would be http://localhost:8080
