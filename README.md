@@ -117,7 +117,7 @@ The API call returns a JSON object.
 
 **Example**
 
-`curl -X POST -H "Authorization: Bearer <API_TOKEN>" -H "Content-Type: application/json" -d '{"host": <SOLIDATUS_HOST>, "modelId": "<MODEL_ID", "query": "<QUERY>"}' <WEBSERVER_DOMAIN>/api/query`
+`curl -X POST -H "Authorization: Bearer <API_TOKEN>" -H "Content-Type: application/json" -d '{"host": <SOLIDATUS_HOST>, "modelId": "<MODEL_ID>", "query": "<QUERY>"}' <WEBSERVER_DOMAIN>/api/query`
 
 An example of a json body passed into  (contained in the `-d` flag for `curl`)
 ```json
@@ -135,3 +135,29 @@ An example of a json body passed into  (contained in the `-d` flag for `curl`)
 
 Requests can be made using any tool that allows you to send HTTP requests.
 
+Therefore a query such as 
+
+`curl -X POST -H "Authorization: Bearer <API_TOKEN>" -H "Content-Type: application/json" -d '{"host": https://demo.solidatus.com, "modelId": "<MODEL_ID>", "query": "isAttribute() and $name = \"Country\""}' <WEBSERVER_DOMAIN>/api/query`
+
+would return a response that looks like 
+
+```
+[
+    {
+        "type": "Attribute",
+        "path": [
+            "Data Warehouse",
+            "Data Warehouse",
+            "Country"
+        ],
+        "properties": {
+            "Business Name": "Country",
+            "Transformation": "Using \"Source\" look up \"Country\" using the Country Table",
+            "DataType": "Text",
+            "Spanish": "Pais",
+            "Japanese": "居住国",
+            "German": "Land"
+        }
+    }
+]
+```
