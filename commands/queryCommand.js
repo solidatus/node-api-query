@@ -5,10 +5,12 @@ const executeQuery = require('../lib/query/executeQuery')
 const HttpsProxyAgent = require('https-proxy-agent')
 const loadModel = require('./util/loadModel')
 
+// change to be consistent with the other API
 const getOutputForEntity = e => {
   if (e.isTransition) {
     return {
       type: 'transition',
+      id: e.id,
       source: getOutputForEntity(e.source),
       target: getOutputForEntity(e.target),
       properties: e.properties
@@ -16,6 +18,7 @@ const getOutputForEntity = e => {
   } else {
     return {
       type: e.getType(),
+      id: e.id,
       path: [...e.getParentsDescending(), e].map(e => e.name),
       properties: e.properties
     }

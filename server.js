@@ -1,4 +1,3 @@
-var fs = require('fs')
 const express = require('express')
 const yargs = require('yargs')
 const queryCommand = require('./commands/queryCommand')
