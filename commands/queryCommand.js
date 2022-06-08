@@ -20,7 +20,8 @@ const getOutputForEntity = e => {
       type: e.getType(),
       id: e.id,
       path: [...e.getParentsDescending(), e].map(e => e.name),
-      properties: e.properties
+      properties: e.properties,
+      name: e.name
     }
   }
 }

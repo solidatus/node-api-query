@@ -3,11 +3,13 @@ const yargs = require('yargs')
 const queryCommand = require('./commands/queryCommand')
 const { QUERY_ERROR_NAMES } = require('./lib/query/queryErrors')
 const http = require('http')
+const cors = require('cors')
 
 const { FetchError } = require('node-fetch')
 const app = express()
 
 app.use(express.json())
+app.use(cors())
 
 const argv = yargs.option('port', {
   demandOption: false,
