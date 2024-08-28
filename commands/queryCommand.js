@@ -38,6 +38,7 @@ const queryModel = async argv => {
     console.log(`Fetching model from: '${argv.host}/api/v1/models/${argv.model}/load'`)
     const modelResponse = await loadModel(argv)
     model = new Model(modelResponse)
+    modelsCache.set(argv.model, model)
     console.log(`Model ${model.id} loaded successfully!`)
   }
   console.log(`Executing query:${argv.query} to model ${model.id}`)
