@@ -26,11 +26,11 @@ const getOutputForEntity = e => {
   }
 }
 
-const modelCache: Map<string, Model> = new Map()
+const modelCache = new Map()
 
 const queryModel = async argv => {
   const cachedModel = modelsCache.get(argv.model)
-  let model: Model
+  let model
   if (cachedModel) {
     console.log(`Using cached model with ID: '${argv.model}'`)
     model = cachedModel
