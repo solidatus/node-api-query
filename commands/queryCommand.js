@@ -26,7 +26,7 @@ const getOutputForEntity = e => {
   }
 }
 
-const modelCache = new Map()
+const modelsCache = new Map()
 
 const queryModel = async argv => {
   const cachedModel = modelsCache.get(argv.model)
